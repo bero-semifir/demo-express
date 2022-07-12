@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+  api:
+    build: .
+    depends_on:
+      - mongo
+    restart: always
+    environment:
+      - API_PORT=3000
+      - DB_URL=mongodb://mongo:27017/app
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+
+  mongo-express:
+    image: mongo-express
+    depends_on:
+      - mongo
+    restart: always
+    ports:
+      - 8081:8081
