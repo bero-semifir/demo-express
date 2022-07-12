@@ -9,6 +9,8 @@ services:
     environment:
       - API_PORT=3000
       - DB_URL=mongodb://mongo:27017/app
+    ports:
+      - 3000:3000
 
   mongo:
     image: mongo
