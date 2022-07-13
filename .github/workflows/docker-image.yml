@@ -13,15 +13,31 @@ jobs:
         
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-        
+#     Récupére les méta pour tagger correctement notre image
+#     Récupère le tag de la release
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+#         nom de base pour l'image (elle sera taggé plus tard)
+          images: |
+            benoitsemifir/demo-express
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+#     Connexion au DockerHub (attention à renseigner les secrets)
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
+#     Build et push de l'image
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/demo-express
+#           récupération des tags généré par Docker meta
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
