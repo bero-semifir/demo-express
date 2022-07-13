@@ -24,4 +24,4 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: benoitsemifir/demo-express
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/demo-express
